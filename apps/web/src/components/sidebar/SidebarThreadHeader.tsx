@@ -1,5 +1,5 @@
 import { useGT } from "gt-react";
-import { FolderPlusIcon, SearchIcon, SquarePenIcon, XIcon } from "lucide-react";
+import { MessageCircleIcon, FolderPlusIcon, SearchIcon, SquarePenIcon, XIcon } from "lucide-react";
 import {
   type ComponentProps,
   type KeyboardEvent as ReactKeyboardEvent,
@@ -17,6 +17,8 @@ export interface SidebarThreadHeaderProps {
   hasProjects: boolean;
   projectScope: ReactNode;
   onNewProject: () => void;
+  onQuickChat?: () => void;
+  quickChatDisabled?: boolean;
   onNewThread: (event: ReactMouseEvent) => void;
   newThreadDisabled: boolean;
   newThreadShortcutLabel: string | null | undefined;
@@ -36,6 +38,8 @@ export function SidebarThreadHeader({
   hasProjects,
   projectScope,
   onNewProject,
+  onQuickChat,
+  quickChatDisabled,
   onNewThread,
   newThreadDisabled,
   newThreadShortcutLabel,
@@ -99,6 +103,16 @@ export function SidebarThreadHeader({
         ) : null}
       </div>
       <div className="flex shrink-0 items-center">
+        {onQuickChat ? (
+          <SidebarHeaderIconButton
+            label={gt("Quick Chat")}
+            tooltip={gt("Quick Chat with Haiku (tools available)")}
+            disabled={quickChatDisabled}
+            onClick={onQuickChat}
+          >
+            <MessageCircleIcon />
+          </SidebarHeaderIconButton>
+        ) : null}
         {hasProjects ? (
           <>
             {projectScope}

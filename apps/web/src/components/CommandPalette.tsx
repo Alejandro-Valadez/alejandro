@@ -1,3 +1,4 @@
+import { useQuickChat } from "../hooks/useQuickChat";
 import { thrownErrorMessage } from "@t3tools/client-runtime/errors";
 import { decodeMsg, msg, T, useGT, useMessages, Var } from "gt-react";
 import { m, type MessageResolver } from "../i18n/messages";
@@ -1323,7 +1324,19 @@ function OpenCommandPaletteDialog(props: {
     if (firstOption) startNewProject(firstOption.environmentId, null);
   };
 
+  const quickChat = useQuickChat();
   const actionItems: Array<CommandPaletteActionItem | CommandPaletteSubmenuItem> = [];
+  if (quickChat.available && !quickChat.isStarting) {
+    actionItems.push({
+      kind: "action",
+      value: "action:quick-chat",
+      searchTerms: ["quick chat", "general", "haiku", "ask"],
+      title: gt("Quick Chat"),
+      description: gt("Quick Chat with Haiku (tools available)"),
+      icon: <MessageSquareIcon className={ITEM_ICON_CLASS} />,
+      run: quickChat.startQuickChat,
+    });
+  }
 
   if (projects.length > 0) {
     const activeProjectTitle =
@@ -1387,7 +1400,7 @@ function OpenCommandPaletteDialog(props: {
       value: "action:triage",
       searchTerms: ["triage", "bug", "issue", "report", "broken", "debug", "help", "support"],
       title: gt("Triage an issue"),
-      description: gt("An agent investigates a T3 Code problem and helps file an issue"),
+      description: gt("An agent investigates an Alejandro problem and helps file an issue"),
       icon: <BugIcon className={ITEM_ICON_CLASS} />,
       run: () => startTriage(triageEnvironmentId),
     });
@@ -1721,7 +1734,7 @@ function OpenCommandPaletteDialog(props: {
       "openclaw",
       "hermes",
     ],
-    title: gt("Use T3 Code in another app (MCP)"),
+    title: gt("Use Alejandro in another app (MCP)"),
     icon: <PlugIcon className={ITEM_ICON_CLASS} />,
     run: async () => {
       openUseInAnotherApp(

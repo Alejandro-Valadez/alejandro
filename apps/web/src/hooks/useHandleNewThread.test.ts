@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vite-plus/test";
-import type { EnvironmentId, ProjectId, RuntimeMode } from "@t3tools/contracts";
+import type { EnvironmentId, ProjectId, RuntimeMode, ModelSelection } from "@t3tools/contracts";
 
 const testState = vi.hoisted(() => {
   let completeProjectFileRead: (value: null) => void = () => undefined;
@@ -50,6 +50,7 @@ const testState = vi.hoisted(() => {
     setLogicalProjectDraftThreadId: vi.fn(),
     setModelSelection: vi.fn(),
     setPrompt: vi.fn(),
+    setInteractionMode: vi.fn(),
   };
 
   return {
@@ -107,6 +108,7 @@ const testState = vi.hoisted(() => {
       draftStore.setDraftThreadContext.mockClear();
       draftStore.setLogicalProjectDraftThreadId.mockClear();
       draftStore.setPrompt.mockClear();
+      draftStore.setInteractionMode.mockClear();
       projectFileRead = new Promise<null>((resolve) => {
         completeProjectFileRead = resolve;
       });
@@ -286,7 +288,11 @@ describe.each([
     testState.reset(draft);
     const pendingOpen = useNewThreadHandler()(
       { environmentId: "environment-ssh", projectId: "project-remote" } as never,
-      { prompt: "Read the playbook. " },
+      {
+        prompt: "Read the playbook. ",
+        modelSelection: { instanceId: "claude", model: "haiku" } as ModelSelection,
+        interactionMode: "default",
+      },
     );
 
     testState.completeProjectFileRead(null);
@@ -295,6 +301,18 @@ describe.each([
     expect(testState.draftStore.setPrompt).toHaveBeenCalledWith(
       opened?.draftId,
       "Read the playbook. ",
+    );
+    expect(testState.draftStore.setModelSelection).toHaveBeenCalledWith(
+      opened?.draftId,
+      { instanceId: "claude", model: "haiku" },
+      { explicit: true, replaceOptions: true },
+    );
+    expect(testState.draftStore.setInteractionMode).toHaveBeenCalledWith(
+      opened?.draftId,
+      "default",
+    );
+    expect(testState.draftStore.setModelSelection.mock.invocationCallOrder.at(-1)).toBeLessThan(
+      testState.router.navigate.mock.invocationCallOrder[0] ?? 0,
     );
     expect(testState.draftStore.setPrompt.mock.invocationCallOrder[0]).toBeLessThan(
       testState.router.navigate.mock.invocationCallOrder[0] ?? 0,
@@ -333,11 +351,17 @@ describe("useNewThreadHandler", () => {
 
     const opened = await useNewThreadHandler()(
       { environmentId: "environment-ssh", projectId: "project-remote" } as never,
-      { prompt: "Read the playbook. " },
+      {
+        prompt: "Read the playbook. ",
+        modelSelection: { instanceId: "claude", model: "haiku" } as ModelSelection,
+        interactionMode: "default",
+      },
     );
 
     expect(opened?.draftId).toBe("draft-raced");
     expect(testState.draftStore.setPrompt).not.toHaveBeenCalled();
+    expect(testState.draftStore.setModelSelection).not.toHaveBeenCalled();
+    expect(testState.draftStore.setInteractionMode).not.toHaveBeenCalled();
   });
 
   it("seeds the prompt into the empty draft that is already open", async () => {
@@ -346,7 +370,11 @@ describe("useNewThreadHandler", () => {
 
     const opened = await useNewThreadHandler()(
       { environmentId: "environment-ssh", projectId: "project-remote" } as never,
-      { prompt: "Read the playbook. " },
+      {
+        prompt: "Read the playbook. ",
+        modelSelection: { instanceId: "claude", model: "haiku" } as ModelSelection,
+        interactionMode: "default",
+      },
     );
 
     expect(opened?.draftId).toBe("draft-open");
