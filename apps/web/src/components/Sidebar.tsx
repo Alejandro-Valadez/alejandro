@@ -3199,6 +3199,7 @@ export default function Sidebar({ routeReveal }: { routeReveal: SidebarRouteReve
               onNewProject={openAddProjectCommandPalette}
               onNewThread={handleNewThreadClick}
               onQuickChat={() => void quickChat.startQuickChat()}
+              onAssistant={() => void router.navigate({ to: "/assistant" })}
               quickChatDisabled={!quickChat.available || quickChat.isStarting}
               newThreadDisabled={projects.length === 0}
               newThreadShortcutLabel={newThreadShortcutLabel}

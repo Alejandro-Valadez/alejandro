@@ -63,6 +63,7 @@ import { useLocation, useNavigate } from "@tanstack/react-router";
 import {
   ArrowLeftIcon,
   BugIcon,
+  BrainIcon,
   ChartNoAxesColumnIcon,
   CheckIcon,
   ChevronRightIcon,
@@ -1755,6 +1756,17 @@ function OpenCommandPaletteDialog(props: {
     shortcutCommand: "usage.open",
     run: async () => {
       await navigate({ to: "/usage" });
+    },
+  });
+
+  actionItems.push({
+    kind: "action",
+    value: "action:assistant",
+    searchTerms: ["assistant", "memory", "routines", "home"],
+    title: gt("Open assistant"),
+    icon: <BrainIcon className={ITEM_ICON_CLASS} />,
+    run: async () => {
+      await navigate({ to: "/assistant" });
     },
   });
 
