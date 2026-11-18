@@ -153,6 +153,16 @@ it.layer(NodeServices.layer)("readAntigravityChildWork", (it) => {
     }),
   );
 
+  it("reads the single-subagent input invoke_subagent sends", () => {
+    expect(
+      antigravitySubagentLaunches({
+        TypeName: "code-implementer",
+        Role: LAUNCH.role,
+        Prompt: LAUNCH.prompt,
+      }),
+    ).toEqual([LAUNCH]);
+  });
+
   it.effect("leaves an auto-approved batch's record out of a launch-text match", () =>
     Effect.gen(function* () {
       const { profile } = yield* makeProfile({ steps: autoApproved });
