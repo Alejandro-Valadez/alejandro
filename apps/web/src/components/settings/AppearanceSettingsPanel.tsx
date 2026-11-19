@@ -169,6 +169,19 @@ export function AppearanceSettingsPanel() {
 
       <SettingsSection id="appearance-interface" title={gt("Interface")}>
         <SettingsRow
+          {...searchableSetting("setting-docs-mode")}
+          description={gt(
+            "Make the app look like a document editor: a white page, a document title bar and menus. Toggle it anytime with Ctrl+Alt+D.",
+          )}
+          control={
+            <Switch
+              checked={settings.docsModeEnabled}
+              onCheckedChange={(checked) => updateSettings({ docsModeEnabled: Boolean(checked) })}
+              aria-label={gt("Docs mode")}
+            />
+          }
+        />
+        <SettingsRow
           {...searchableSetting("setting-appearance-contrast")}
           description={gt("Adjust the contrast of colors and borders across the interface.")}
           resetAction={

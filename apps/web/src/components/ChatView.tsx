@@ -1,4 +1,5 @@
 import { m } from "../i18n/messages";
+import { DocsModeToolbar } from "./docsMode/DocsModeToolbar";
 import { thrownErrorMessage } from "@t3tools/client-runtime/errors";
 import { useGT, useMessages } from "gt-react";
 import { ChildThreadApprovals } from "./chat/ChildThreadApprovals";
@@ -3425,6 +3426,7 @@ export default function ChatView(props: ChatViewProps) {
             />
           </header>
         )}
+        {embedded ? null : <DocsModeToolbar title={activeThread.title} />}
 
         <div className="relative flex min-h-0 min-w-0 flex-1">
           <ThreadFindCanvas

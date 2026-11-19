@@ -45,7 +45,8 @@ import {
   startModelPreferencesMigration,
   subscribeClientSettings,
 } from "./hooks/useSettings";
-import { syncBrowserChromeTheme } from "./hooks/useTheme";
+import { refreshTheme, syncBrowserChromeTheme } from "./hooks/useTheme";
+import { docsModeWindowTitle, setDocsModeActive } from "./docsMode";
 import { startThreadVisitedMigration } from "./hooks/useThreadVisitedMigration";
 import { installDesktopPasteAsText } from "./lib/desktopPasteAsText";
 import {
@@ -89,6 +90,7 @@ function startClientAppearance(): void {
     if (previous?.chatWidth !== settings.chatWidth) {
       root.dataset.chatWidth = settings.chatWidth;
     }
+    if (setDocsModeActive(settings.docsModeEnabled)) refreshTheme();
     if (previous?.appearanceContrast !== settings.appearanceContrast) {
       applyAppearanceContrast(root, settings.appearanceContrast);
     }
@@ -182,8 +184,11 @@ function startDocumentTitle(router: AppRouter): void {
       }),
       desktop: isElectron,
     });
+    const shownTitle = getClientSettings().docsModeEnabled
+      ? docsModeWindowTitle(thread?.title ?? null)
+      : title;
     // Projects change whenever any project does; most changes leave the title alone.
-    if (document.title !== title) document.title = title;
+    if (document.title !== shownTitle) document.title = shownTitle;
   };
   // The open thread's own shell, since the shell lists skip threads hidden by a tag filter.
   let unsubscribeOpenThread = () => {};

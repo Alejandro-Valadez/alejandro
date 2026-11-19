@@ -440,6 +440,7 @@ const COMMAND_LABELS: Partial<Record<KeybindingCommand, string>> = {
   "usage.open": msg("Usage: Open"),
   "theme.select": msg("Theme: Select"),
   "appearance.cycle": msg("Appearance: Cycle"),
+  "docsMode.toggle": msg("Docs Mode: Toggle"),
   "themeEditor.toggle": msg("Theme Editor: Toggle"),
   "composer.stash": msg("Composer: Stash"),
   "composer.host": msg("Composer: Host"),

@@ -64,6 +64,7 @@ import {
   ArrowLeftIcon,
   BugIcon,
   BrainIcon,
+  FileTextIcon,
   ChartNoAxesColumnIcon,
   CheckIcon,
   ChevronRightIcon,
@@ -116,7 +117,7 @@ import {
   copyPromptLink,
   promptLinkRepositoryOf,
 } from "./promptLinks/copyPromptLink";
-import { useClientSettings } from "../hooks/useSettings";
+import { getClientSettings, updateClientSettings, useClientSettings } from "../hooks/useSettings";
 import { useStableCallback } from "../hooks/useStableCallback";
 import { readLocalApi } from "../localApi";
 import { configuredHostedAppUrl } from "../hostedPairing";
@@ -1756,6 +1757,18 @@ function OpenCommandPaletteDialog(props: {
     shortcutCommand: "usage.open",
     run: async () => {
       await navigate({ to: "/usage" });
+    },
+  });
+
+  actionItems.push({
+    kind: "action",
+    value: "action:docs-mode",
+    searchTerms: ["docs", "document", "disguise", "google", "writing", "mode"],
+    title: gt("Toggle Docs mode"),
+    icon: <FileTextIcon className={ITEM_ICON_CLASS} />,
+    shortcutCommand: "docsMode.toggle",
+    run: async () => {
+      await updateClientSettings({ docsModeEnabled: !getClientSettings().docsModeEnabled });
     },
   });
 

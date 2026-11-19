@@ -10,6 +10,7 @@ import { overlayModeForCommand } from "../components/CommandPalette.logic";
 import { APPEARANCE_OPTIONS, notifyThemeSaveFailure } from "../components/CommandPaletteThemeItems";
 import { toggleThemeEditorForTheme } from "../components/settings/themeEditorStore";
 import { toastManager } from "../components/ui/toast";
+import { getClientSettings, updateClientSettings } from "../hooks/useSettings";
 import { getThemeSnapshot, setAppearanceMode } from "../hooks/useTheme";
 import { m } from "../i18n/messages";
 import { selectActiveRightPanel, useRightPanelStore } from "../rightPanelStore";
@@ -88,6 +89,10 @@ export function installCommandPaletteCommands(
         consume(event);
         if (event.repeat) return;
         dispatchCommandPalette({ _tag: "OpenChangeTheme" });
+      },
+      "docsMode.toggle": (event) => {
+        consume(event);
+        void updateClientSettings({ docsModeEnabled: !getClientSettings().docsModeEnabled });
       },
       "themeEditor.toggle": (event) => {
         consume(event);

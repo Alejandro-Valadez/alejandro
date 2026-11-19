@@ -3,6 +3,7 @@ import type { DesktopBridge } from "@t3tools/contracts";
 import { safeErrorLogAttributes } from "@t3tools/client-runtime/errors";
 import * as Schema from "effect/Schema";
 import { useSyncExternalStore } from "react";
+import { isDocsModeActive } from "../docsMode";
 import {
   applyThemePalette,
   CUSTOM_THEMES_STORAGE_KEY,
@@ -326,13 +327,10 @@ function applyTheme(theme: Theme, { suppressTransitions = false, preservePreview
   if (suppressTransitions) {
     document.documentElement.classList.add("no-transitions");
   }
-  const resolvedAppearance = resolveThemeAppearance(
-    theme,
-    systemDark,
-    followSystem,
-    appearanceMode,
-    themeHalves,
-  );
+  // Docs mode paints its own light page over whatever theme is chosen.
+  const resolvedAppearance = isDocsModeActive()
+    ? "light"
+    : resolveThemeAppearance(theme, systemDark, followSystem, appearanceMode, themeHalves);
   applyThemePalette(resolveThemeHalf(theme, themeHalves, resolvedAppearance), resolvedAppearance);
   document.documentElement.classList.toggle("dark", resolvedAppearance === "dark");
   lastAppliedTheme = { theme, systemDark, followSystem, appearanceMode, themeHalves };
